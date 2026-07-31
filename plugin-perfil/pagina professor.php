@@ -489,7 +489,13 @@ $pagina_do_professor_shortcode = function ($atts) {
     </script>
  
     <?php
-    return ob_get_clean();
+    $perfil_html = ob_get_clean();
+
+    $publicacoes_html = do_shortcode(
+        '[fct_posts_professor_teste id="' . absint( $id ) . '"]'
+    );
+
+    return $perfil_html . '<section class="fp-publicacoes-integradas">' . $publicacoes_html . '</section>';
 };
 
 add_shortcode('pagina_do_professor', $pagina_do_professor_shortcode);
@@ -683,6 +689,7 @@ add_shortcode('fct_posts_professor_teste', function ($atts) {
     </style>
  
     <div id="publicacoes-<?php echo esc_attr($author_id); ?>" class="pubx-section">
+        <h2 class="pubx-header">Publicações do professor</h2>
  
         <?php if (!empty($categorias) || $query->have_posts() || $tem_filtro): ?>
         <form class="pubx-filtros" method="get" action="<?php echo esc_url($base_url); ?>">
