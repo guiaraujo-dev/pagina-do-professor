@@ -88,9 +88,13 @@ function fct_professor_carregar_dados_do_perfil($user_id, $fallback = array()) {
         $dados['campus'] = $campus;
     }
 
+    $sobre = get_user_meta($user_id, 'plugin_perfil_sobre', true);
+    if (!empty($sobre)) {
+        $dados['sobre'] = $sobre;
+    }
+
     $atuacao = get_user_meta($user_id, 'plugin_perfil_atuacao', true);
     if (!empty($atuacao)) {
-        $dados['sobre'] = wp_strip_all_tags($atuacao);
         $dados['atuacao'] = $atuacao;
     }
 

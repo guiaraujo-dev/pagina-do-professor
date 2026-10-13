@@ -26,6 +26,7 @@ function plugin_perfil_render_profile_fields( $user ) {
 	$titulacao_principal = get_user_meta( $user->ID, 'plugin_perfil_titulacao_principal', true );
 	$curriculo_lattes    = get_user_meta( $user->ID, 'plugin_perfil_curriculo_lattes', true );
 	$vinculo_institucional = get_user_meta( $user->ID, 'plugin_perfil_vinculo_institucional', true );
+	$sobre               = get_user_meta( $user->ID, 'plugin_perfil_sobre', true );
 	$atuacao             = get_user_meta( $user->ID, 'plugin_perfil_atuacao', true );
 	$historico_formacao  = get_user_meta( $user->ID, 'plugin_perfil_historico_formacao', true );
 
@@ -60,6 +61,25 @@ function plugin_perfil_render_profile_fields( $user ) {
 			<th><label for="plugin_perfil_vinculo_institucional"><?php esc_html_e( 'Vínculo Institucional', 'plugin-perfil' ); ?></label></th>
 			<td>
 				<textarea name="plugin_perfil_vinculo_institucional" id="plugin_perfil_vinculo_institucional" rows="4" class="large-text"><?php echo esc_textarea( $vinculo_institucional ); ?></textarea>
+			</td>
+		</tr>
+
+		<tr>
+			<th><label><?php esc_html_e( 'Sobre mim', 'plugin-perfil' ); ?></label></th>
+			<td>
+				<?php
+				wp_editor(
+					wp_kses_post( $sobre ),
+					'plugin_perfil_sobre',
+					array(
+						'textarea_name' => 'plugin_perfil_sobre',
+						'textarea_rows' => 8,
+						'media_buttons' => false,
+						'teeny'         => true,
+						'tinymce'       => true,
+					)
+				);
+				?>
 			</td>
 		</tr>
 
@@ -237,12 +257,14 @@ function plugin_perfil_save_profile_fields( $user_id ) {
 	$titulacao_principal = isset( $_POST['plugin_perfil_titulacao_principal'] ) ? sanitize_text_field( wp_unslash( $_POST['plugin_perfil_titulacao_principal'] ) ) : '';
 	$curriculo_lattes    = isset( $_POST['plugin_perfil_curriculo_lattes'] ) ? esc_url_raw( wp_unslash( $_POST['plugin_perfil_curriculo_lattes'] ) ) : '';
 	$vinculo_institucional = isset( $_POST['plugin_perfil_vinculo_institucional'] ) ? sanitize_textarea_field( wp_unslash( $_POST['plugin_perfil_vinculo_institucional'] ) ) : '';
+	$sobre               = isset( $_POST['plugin_perfil_sobre'] ) ? wp_kses_post( wp_unslash( $_POST['plugin_perfil_sobre'] ) ) : '';
 	$atuacao             = isset( $_POST['plugin_perfil_atuacao'] ) ? wp_kses_post( wp_unslash( $_POST['plugin_perfil_atuacao'] ) ) : '';
 
 	update_user_meta( $user_id, 'plugin_perfil_cargo_categoria', $cargo_categoria );
 	update_user_meta( $user_id, 'plugin_perfil_titulacao_principal', $titulacao_principal );
 	update_user_meta( $user_id, 'plugin_perfil_curriculo_lattes', $curriculo_lattes );
 	update_user_meta( $user_id, 'plugin_perfil_vinculo_institucional', $vinculo_institucional );
+	update_user_meta( $user_id, 'plugin_perfil_sobre', $sobre );
 	update_user_meta( $user_id, 'plugin_perfil_atuacao', $atuacao );
 
 	$historico_formacao = array();
